@@ -11,9 +11,9 @@ class Common_SignFilter implements PhalApi_Filter {
       $domain = DI()->request->get('domain');
       $key =  DI()->request->get('key');
       
-
-        if (!$Domain_Users->isJoinIn($domain,$key)) {
-            throw new PhalApi_Exception_BadRequest(T('wrong sign'));
-        }
+      //密钥是否正确
+      if (!$Domain_Users->isJoinIn($domain,$key)) {
+          throw new PhalApi_Exception_BadRequest(T('wrong sign'));
+      }
     }
 }

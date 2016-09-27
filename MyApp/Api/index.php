@@ -27,10 +27,14 @@ class Api_Index extends PhalApi_Api {
 	public function index() {
         
         return array(
-            'info' => 'Hello World!22',
+            'info' => '3331111',
             'time' => $_SERVER['REQUEST_TIME'],
         );
 	}
+
+
+
+
 
 
 }

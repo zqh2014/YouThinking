@@ -2,7 +2,7 @@
 /**
  * 团队数据源类
  * 
- * - 用户
+ * - 用户模型
  * 
  * @author Qui
  */
@@ -16,7 +16,7 @@ class Model_Users extends PhalApi_Model_NotORM {
 
 
      /**
-     * key是否正确
+     * key是否正确是否存在
      *  
      * @return bool  true匹配成功，false匹配失败
      * 
