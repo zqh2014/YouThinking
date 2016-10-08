@@ -1,8 +1,8 @@
 <?php
 /**
- * 投票领域业务类
+ * 登录网站和网站登录后的操作
  * 
- * @author dogstar <chanzonghuang@gmail.com> 20150517
+ * @author Quinn 20160927
  */
 
 class Domain_Login {
@@ -10,15 +10,18 @@ class Domain_Login {
 
 
       /**
-     * key是否正确
-     *  
-     * @return bool  true匹配成功，false匹配失败
+     * 用户登录
+     * @param login_data 登录需要的数据
+     * @return string 返回登录返回的的信息。
      * 
      */
-    public function userLogin($user_name, $password,$captcha="",$model_class="Model_Icoord") {
-        $model = new $model_class();
-        return   $model->userLogin("", "" , "");
-       
+    public function userLogin($login_data) {
+
+        $model = new $login_data->model_class();
+        $login_info = $model->userLogin($login_data);
+        return   $login_info;
 
     }
+
+
 }

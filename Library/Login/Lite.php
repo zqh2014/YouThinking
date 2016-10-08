@@ -55,8 +55,8 @@ $status = $login->check();
 	//phpinfo();exit;
 //  header("Content-type: text/html; charset=utf-8"); 
 // require("curl.class.php");
-// define('PATH_COOKIE',"./url/");
-// define('CACHE_PATH',"./log/");
+define('PATH_COOKIE',"E:/cff/test/hub/YouThinking/Data/log/url/");
+define('CACHE_PATH',"E:/cff/test/hub/YouThinking/Data/log/cache/");
 
 
 // $logins = new logins();
@@ -222,6 +222,7 @@ class Login_Lite{
 			}else{
 				$cookie = PATH_COOKIE.$this->m_cookie_pre.$this->m_cookie.'.txt';
 			}
+			
 			if(!is_dir(PATH_COOKIE))chk_dir(PATH_COOKIE);
 			//$this->m_debug =true;
 			//pecho(PATH_COOKIE);
@@ -676,5 +677,11 @@ class Login_Lite{
 	  else return '';
 	  return $message[0];
 	
+	}
+
+	//未知方法
+	function chk_dir($str){
+
+		
 	}
 ?>

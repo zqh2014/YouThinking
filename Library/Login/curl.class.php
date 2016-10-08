@@ -484,7 +484,7 @@ class curl
 		  $thePostString .= '&' . urlencode((string)$thePrefix) . '=' . urlencode($theData) ;
 		}
 
-		$xxx =& substr($thePostString, 1) ;
+		$xxx = substr($thePostString, 1) ;
 
 		return $xxx ;
 	  }
