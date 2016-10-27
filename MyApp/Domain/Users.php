@@ -1,6 +1,6 @@
 <?php
 /**
- * 投票领域业务类
+ * 用户领域业务类
  * 
  * @author dogstar <chanzonghuang@gmail.com> 20150517
  */

@@ -20,8 +20,17 @@ class Api_Site extends PhalApi_Api {
             	'model_class'  => array('name' => 'model_class', 'require' => true),	//网站模型
             	),
             'get_contents'=> array(
-            	'url' => array('name' => 'url', 'require' => true)	 //用户名
-            	)
+            	'url' => array('name' => 'url', 'require' => true)	 //url地址 带http://
+            	),
+            'get_contents_post'=>array(
+                'url' => array('name' => 'url', 'require' => true),   //url地址 带http://
+                'nickname'=>array('name' => 'nickname', 'require' => true),
+                'sex'=>array('name' => 'sex', 'default' => '0'),
+                'province'=>array('name' => 'province', 'default' => ''),
+                'city'=>array('name' => 'city', 'default' => ''),
+                'district'=>array('name' => 'district', 'default' => ''),
+                'signature'=>array('name' => 'signature', 'require' => true)
+                )
         );
 	}
 	
@@ -46,7 +55,15 @@ class Api_Site extends PhalApi_Api {
 
 	}
 
+    //获取要登录的页面
+    public function get_contents_post(){
 
+        $Domain_Common = new Domain_Common();
+
+        $data_info = $Domain_Common->get_contents_post($this);
+        return $data_info;
+
+    }
 
 
 

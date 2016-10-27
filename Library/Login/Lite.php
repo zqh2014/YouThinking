@@ -261,6 +261,7 @@ class Login_Lite{
 		
 		return  self::get_content_curl($config);
 	}
+
 	function file_get($url){
 	$headers;
 	//$headers[] = 'User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.6) Gecko/20100625 Firefox/3.6.6 FirePHP/0.4';
@@ -400,6 +401,7 @@ class Login_Lite{
 				}
 			}
 		}
+		
 		$this->log(date("Y-m-d H:i:s")."\t".$m_url."\t".$post."\t".$m_cookie_name."\t".strlen($this->m_content)."\t".substr(str_replace('&nbsp;','',preg_replace('@[\s]+@',' ',strip_tags( iconv('UTF-8','GBK//ignore',$this->m_content)))),0,200));
 
 		return $this->m_content;

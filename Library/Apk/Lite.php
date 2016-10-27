@@ -34,7 +34,7 @@ class Apk_Lite {
 
     public function getXML($node = NULL, $lv = -1) {
 
-        if ($lv == -1) {
+        if ($lv == -1) { 
             $node = $this->root;
         }
         if (!$node) {
