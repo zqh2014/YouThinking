@@ -26,7 +26,7 @@ class Model_Icoord extends PhalApi_Model_NotORM {
         $this->url_login=$this->url_home.'/index.php?s=/ucenter/member/login.html';
         $this->url_logout=$this->url_home.'/index.php?s=/ucenter/system/logout.html';
         $this->url_check  = $this->url_home.'http://www.icoord.com';
-        $this->flag_check = 'dropdown-toggle-avatar"';
+        $this->flag_check = '未读';
         $this->flag_login = '未读';
     }
 

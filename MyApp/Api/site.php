@@ -9,6 +9,7 @@ class Api_Site extends PhalApi_Api {
 
 
 	public function getRules() {
+        //print_r($_REQUEST);
         return array(
 
             'login'=>array( 
@@ -26,7 +27,7 @@ class Api_Site extends PhalApi_Api {
                 'url' => array('name' => 'url', 'require' => true),   //url地址 带http://
                 'nickname'=>array('name' => 'nickname', 'require' => true),
                 'sex'=>array('name' => 'sex', 'default' => '0'),
-                'province'=>array('name' => 'province', 'default' => ''),
+                'province'=>array('name' => 'province', 'type'=>'int', 'default' => 1),
                 'city'=>array('name' => 'city', 'default' => ''),
                 'district'=>array('name' => 'district', 'default' => ''),
                 'signature'=>array('name' => 'signature', 'require' => true)
@@ -57,7 +58,6 @@ class Api_Site extends PhalApi_Api {
 
     //获取要登录的页面
     public function get_contents_post(){
-
         $Domain_Common = new Domain_Common();
 
         $data_info = $Domain_Common->get_contents_post($this);
