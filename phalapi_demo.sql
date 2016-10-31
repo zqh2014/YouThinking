@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `ic_user_info` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户ID',
   `source_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '来源类型（1：搜索引擎；2：论坛；3：线下；4：朋友推荐；5：其它）',
-  `grade` tinyint(1) DEFAULT '0' COMMENT '用户等级（对应cff_dictionary表type=''user_grade''匹配）',
+  `grade` tinyint(1) DEFAULT '0' COMMENT '用户等级',
   `integral` int(11) NOT NULL DEFAULT '0' COMMENT '积分',
   `integral_frozen` int(11) NOT NULL DEFAULT '0' COMMENT '冻结的积分',
   `email` varchar(60) DEFAULT '' COMMENT '会员邮箱',
