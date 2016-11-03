@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2016-10-31 02:44:40
+-- Generation Time: 2016-11-03 03:27:48
 -- 服务器版本： 5.6.17
 -- PHP Version: 5.5.12
 
@@ -31,10 +31,17 @@ CREATE TABLE IF NOT EXISTS `ic_site` (
   `name` varchar(200) NOT NULL COMMENT '网站名称',
   `domain` varchar(50) NOT NULL COMMENT '网站域名',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '网站状态1.正常，2.禁用',
-  `is_del` tinyint(1) NOT NULL COMMENT '是否删除，0.未删除，1.已删除',
-  `ctime` int(11) NOT NULL COMMENT '创建时间',
+  `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除，0.未删除，1.已删除',
+  `ctime` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='网站表' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='网站表' AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `ic_site`
+--
+
+INSERT INTO `ic_site` (`id`, `name`, `domain`, `status`, `is_del`, `ctime`) VALUES
+(1, 'icoord', 'http://www.icoord.com', 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -53,14 +60,22 @@ CREATE TABLE IF NOT EXISTS `ic_site_field_config` (
   `format` varchar(100) NOT NULL COMMENT '参数格式',
   `separator_symbol` varchar(20) NOT NULL COMMENT '分隔符（6.数组参数使用）',
   `range_value` varchar(255) NOT NULL COMMENT '范围（枚举，文件时使用，保存JSON数组）',
-  `ext` int(255) NOT NULL COMMENT '支持的文件扩展名（文件类型使用保存json数组）',
+  `ext` varchar(255) NOT NULL COMMENT '支持的文件扩展名（文件类型使用保存json数组）',
   `default_value` varchar(255) NOT NULL COMMENT '默认值',
-  `desc_info` int(255) NOT NULL COMMENT '字段描述',
-  `status` int(11) NOT NULL DEFAULT '1' COMMENT '状态（1.正常，2.禁用）',
-  `is_del` int(11) NOT NULL COMMENT '是否删除（0.未删除，1.已删除）',
-  `ctime` int(11) NOT NULL COMMENT '创建时间',
+  `desc_info` varchar(255) NOT NULL COMMENT '字段描述',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态（1.正常，2.禁用）',
+  `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除（0.未删除，1.已删除）',
+  `ctime` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- 转存表中的数据 `ic_site_field_config`
+--
+
+INSERT INTO `ic_site_field_config` (`id`, `site_url_id`, `field_name`, `type`, `is_require`, `max`, `min`, `format`, `separator_symbol`, `range_value`, `ext`, `default_value`, `desc_info`, `status`, `is_del`, `ctime`) VALUES
+(1, 1, 'user_name', 1, 1, 0, 0, '', '', '', '0', '', '用户名', 1, 0, 0),
+(2, 1, 'password', 1, 1, 0, 0, '', '', '', '0', '', '密码', 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -76,10 +91,17 @@ CREATE TABLE IF NOT EXISTS `ic_site_login_config` (
   `flag_check` varchar(255) NOT NULL COMMENT '是否登录（检查是否已经登录），登录成功后页面会显示的文字',
   `flag_login` varchar(255) NOT NULL COMMENT '是否登录成功（提交数据后检查是否登录成功），登录成功递交时会显示的文字',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态（1.正常，2.禁用）',
-  `is_del` tinyint(1) NOT NULL COMMENT '是否删除（0.未删除，1.已删除）',
-  `ctime` int(11) NOT NULL COMMENT '创建时间',
+  `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除（0.未删除，1.已删除）',
+  `ctime` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='登录配置信息' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='登录配置信息' AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `ic_site_login_config`
+--
+
+INSERT INTO `ic_site_login_config` (`id`, `site_url_id`, `url_login`, `url_logout`, `flag_check`, `flag_login`, `status`, `is_del`, `ctime`) VALUES
+(1, 1, '/index.php?s=/ucenter/member/login.html', '/index.php?s=/ucenter/system/logout.html', '未读', '未读', 1, 0, 1111111);
 
 -- --------------------------------------------------------
 
@@ -96,10 +118,18 @@ CREATE TABLE IF NOT EXISTS `ic_site_url` (
   `method_name` varchar(50) NOT NULL COMMENT '方法名',
   `class_name` varchar(50) NOT NULL COMMENT '类名',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态（1.正常，2.禁用））',
-  `is_del` tinyint(1) NOT NULL COMMENT '是否删除（0.未删除，1.已删除））',
-  `ctime` int(11) NOT NULL COMMENT '创建时间',
+  `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除（0.未删除，1.已删除））',
+  `ctime` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='网站链接表' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='网站链接表' AUTO_INCREMENT=3 ;
+
+--
+-- 转存表中的数据 `ic_site_url`
+--
+
+INSERT INTO `ic_site_url` (`id`, `site_id`, `type`, `url`, `name`, `method_name`, `class_name`, `status`, `is_del`, `ctime`) VALUES
+(1, 1, 2, '/index.php?s=/ucenter/member/login.html', 'icoord登录页面', '', '', 1, 0, 0),
+(2, 1, 3, '/index.php?s=/ucenter/config/index.html', 'icoord个人信息修改', '', '', 1, 0, 0);
 
 -- --------------------------------------------------------
 
