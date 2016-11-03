@@ -12,7 +12,7 @@ class Domain_Common {
       /**
      * 获取页面
      *  
-     * @return string 返回登录返回的的信息。
+     * @return string 返回信息。
      * 
      */
     public function get_contents($url) {

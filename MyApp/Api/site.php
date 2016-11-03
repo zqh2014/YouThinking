@@ -10,6 +10,18 @@ class Api_Site extends PhalApi_Api {
 
 	public function getRules() {
         //print_r($_REQUEST);
+
+        if(!empty($_REQUEST['url_id'])){
+            $url_id = $_REQUEST['url_id'];
+        }else{
+             throw new PhalApi_Exception_BadRequest("参数错误！");
+        }
+        $site = new Domain_Site();
+
+        $site->getRulesArray($url_id);
+
+
+        
         return array(
 
             'login'=>array( 
