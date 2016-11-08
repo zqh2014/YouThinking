@@ -59,18 +59,18 @@ class Model_Icoord extends PhalApi_Model_NotORM {
 
         DI()->loginLite->login();
         $status =  DI()->loginLite->check();
-            if(!$status){
-               // echo '<font color="red">登录失效1</font>';
-                //登录时需要递交的参数(用户名，密码，验证码）
-                //如果有验证码，需要先显示验证码
-                $posts=array(
-                    'username'=>$login_data->user_name,
-                    'password'=>$login_data->password
-                );
-                DI()->loginLite->m_logins = $posts;  
-                $status =  DI()->loginLite->login();
+        if(!$status){
+            // echo '<font color="red">登录失效1</font>';
+            //登录时需要递交的参数(用户名，密码，验证码）
+            //如果有验证码，需要先显示验证码
+            $posts=array(
+                'username'=>$login_data->user_name,
+                'password'=>$login_data->password
+            );
+            DI()->loginLite->m_logins = $posts;  
+            $status =  DI()->loginLite->login();
 
-            }
+        }
 
  //print_r(DI()->loginLite->m_content); 
 //$status = DI()->loginLite->logout();//退出登录
