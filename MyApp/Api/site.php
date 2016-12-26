@@ -1,6 +1,6 @@
 <?php
 /**
- * 默认接口服务类
+ * 网站登录操作
  *
  * @author: dogstar <chanzonghuang@gmail.com> 2014-10-04
  */
@@ -28,9 +28,13 @@ class Api_Site extends PhalApi_Api {
             
              throw new PhalApi_Exception_BadRequest("错误代码：A101");
         }
-        
+      
+              $arr =array(
+                'get_contents'=> array(
+                    'url' => array('name' => 'url', 'require' => true) )  //url地址 带http://
+             );
 
-        return $this->Domain_site->getRulesArray($this->url_id);    
+        return array_merge($arr,$this->Domain_site->getRulesArray($this->url_id));    
         // return array(
 
         //     'login'=>array( 
