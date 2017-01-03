@@ -1,22 +1,36 @@
 <?php
+
+require('cos-php/include.php');
+use qcloudcos\Cosapi;
+Cosapi::setTimeout(180);
+// 设置COS所在的区域，对应关系如下：
+//     华南  -> gz
+//     华中  -> sh
+//     华北  -> tj
+Cosapi::setRegion('tj');
+
 class Wx_article {
 	private $url;
 	private $path;
+	private $cos_obj;
+	private $bucket_contents = 'article';
 	private function ksort($arr) {
 		foreach ( $arr as $value ) {
 			$temp [] = $value;
 		}
 		return $temp;
 	}
-	public function __construct($url, $path) {
-		$this->url = $url;
-		$this->path = $path;
+	public function __construct() {
+		//$this->url = $url;
+		//$this->path = $path;
 		// 设置脚本执行不超时
 		set_time_limit ( 0 );
 	}
 
 	//按链接获取文章
-	public function fetch() {
+	public function fetch($url, $path) {
+		$this->url = $url;
+		$this->path = $path;
 		return $this->transform ( $this->url, $this->path );
 	}
 
@@ -34,6 +48,7 @@ class Wx_article {
 	private function transform($url, $path) {
 		if (! file_exists ( $path ))
 			mkdir ( $path );
+
 		$data ['url'] = $url; // 文章URL
 		$content = file_get_contents ( $url );
 		preg_match ( '/<title>(.*)<\/title>/i', $content, $result );
@@ -80,14 +95,117 @@ class Wx_article {
 		// 更新所有data-src的地址
 		$result [1] = str_replace ( "data-src", "src", $result [1] );
 		// 返回处理后的微信主体内容。
-		$data ['content'] = trim($result [1]);
+		$data['content'] = trim($result [1]);
+
 		return $data;
 	}
 
+	//soso获取微信文章url，返回列表
+	public function get_link_by_url($url){
+
+		$content = file_get_contents($url);
+		$preg = '/\<li (.*?)\<\/li\>/s';
+		preg_match_all($preg, $content, $match);
+
+		$data = array();
+		foreach($match[0] as $key => $value){
+			$preg = '/href="(.*?)\" target/s';
+			preg_match_all($preg, $value, $match_url);
+			$data[$key]['match_url'] = $match_url[1][0];
+			$preg = '/target=\"_blank\">(.*?)<\/a><\/h3>/i';
+			preg_match_all($preg, $value, $match_title);
+			$data[$key]['title'] = $match_title[1][0];
+		}
+
+		print_r($data);
+
+	}
+
+
+
+	//获取随机字符1-4r5f
+	private function createRandomStr($length=4){
+		$str = '0123456789abcdefghijklmnopqrstuvwxyz';//36个字符
+		$strlen = 36;
+		while($length > $strlen){
+		$str .= $str;
+		$strlen += 36;
+		}
+		$str = str_shuffle($str);
+		return substr($str,0,$length);
+	} 
+
+	/*创建和上传当前目录的图片到腾讯云
+	* @Param $folder 目标文件夹 如：/testfolder
+	* @Param $content 文章内容
+	* @Return 
+	*/
+	private function upAllFile($folder,$content){
+
+
+		$folder_con = "/article_contents/".$folder;
 
 	
+		$ret = Cosapi::statFolder($this->folder_con, $folder_con);	//文件夹是否存在
+		
+		if($ret['code']!=0){	//不存在，则新建目录
+			$ret = Cosapi::createFolder($this->folder_con, $folder_con);	//创建文件夹
+			if($ret['code']!=0){	
+
+				return false;  //创建不成功
+
+			}
+
+		}
+
+		$file_arr = $this->getFileList("aa");
+
+		foreach($file_arr as $value){
+
+			Cosapi::upload($this->bucket_img, "./aa/".$value, $folder_con."/".$value);	
+		}
+
+
+		return true;
+
+
+		//
+
+
+	}
+
+
+	//获取文件列表
+	private function getFileList($dir) {
+    $fileArray[]=NULL;
+    if (false != ($handle = opendir ( $dir ))) {
+        $i=0;
+        while ( false !== ($file = readdir ( $handle )) ) {
+            //去掉"“.”、“..”以及带“.xxx”后缀的文件
+            if ($file != "." && $file != ".."&&strpos($file,".")) {
+                $fileArray[$i]=$file;
+                if($i==100){
+                    break;
+                }
+                $i++;
+            }
+        }
+        //关闭句柄
+        closedir ( $handle );
+    }
+    return $fileArray;
 }
 
 
-	$a= new Wx_article("https://mp.weixin.qq.com/s/wvGnYERCGKkVyvpM2acybg","aa");
-	print_r($a->fetch());
+}
+
+header("Content-Type:text/html;charset=utf-8");
+	$a= new Wx_article();
+	//print_r($a->fetch("https://mp.weixin.qq.com/s/wvGnYERCGKkVyvpM2acybg","aa"));
+	//$a->get_link_by_url("http://weixin.sogou.com/pcindex/pc/pc_1/pc_1.html");
+
+
+
+
+
+	//print_r($a->fetch("http://mp.weixin.qq.com/s?src=3&timestamp=1483427587&ver=1&signature=hdj5EyVylnxFBX-OnEW4nGARjSF8yLMZIvDSop2AFNG0G4ZJ8NYoGzbL0uPNflroybWhzZJ67rnX8f8nN-bSb0gn8P3jb3af1c6*W60Iu3HYikzaSzN3aS1CDHdYnSbbP8DV6bE09mxnjSIjRA9Bj3AAxkFP9Ekbwl9SE3wACmw=","1-lo09"));
