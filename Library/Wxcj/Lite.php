@@ -1,5 +1,4 @@
 <?php
-
 require('cos-php/include.php');
 use qcloudcos\Cosapi;
 Cosapi::setTimeout(180);
@@ -15,7 +14,6 @@ class Wxcj_Lite {
 	private $cos_obj;
 	private $bucket_contents = 'article';
 	private $dir = "http://article-1252171157.cosgz.myqcloud.com/article_contents/";
-
 
 	private function ksort($arr) {
 		foreach ( $arr as $value ) {
@@ -191,7 +189,7 @@ class Wxcj_Lite {
 	}
 
 	//删除该目录及所有文件
-	function delDirAndFile( $dirName ){
+	public function delDirAndFile( $dirName ){
 		if ( $handle = opendir( "$dirName" ) ) {
 			while ( false !== ( $item = readdir( $handle ) ) ) {
 				if ( $item != "." && $item != ".." ) {
