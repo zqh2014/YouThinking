@@ -9,7 +9,7 @@ Cosapi::setTimeout(180);
 //     华北  -> tj
 Cosapi::setRegion('gz');
 
-class Wx_article {
+class Wxcj_Lite {
 	private $url;
 	private $path;
 	private $cos_obj;
@@ -211,13 +211,3 @@ class Wx_article {
 
 }	//class end
 
-// header("Content-Type:text/html;charset=utf-8");
-// 	$a= new Wx_article();
-// 	print_r($a->fetch("https://mp.weixin.qq.com/s/wvGnYERCGKkVyvpM2acybg","aa"));
-	//print_r($a->get_link_by_url("http://weixin.sogou.com/pcindex/pc/pc_1/pc_1.html"));
-
-
-
-
-
-	//print_r($a->fetch("http://mp.weixin.qq.com/s?src=3&timestamp=1483427587&ver=1&signature=hdj5EyVylnxFBX-OnEW4nGARjSF8yLMZIvDSop2AFNG0G4ZJ8NYoGzbL0uPNflroybWhzZJ67rnX8f8nN-bSb0gn8P3jb3af1c6*W60Iu3HYikzaSzN3aS1CDHdYnSbbP8DV6bE09mxnjSIjRA9Bj3AAxkFP9Ekbwl9SE3wACmw=","1-lo09"));
