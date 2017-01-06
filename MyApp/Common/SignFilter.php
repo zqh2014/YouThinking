@@ -15,8 +15,6 @@ class Common_SignFilter implements PhalApi_Filter {
 
       if($is_url!==false){
         DI()->loginLite->m_glype_porxy =  $domain."/glype/browse.php?u={url}&b=12&f=norefer";
-      }else{
-        throw new PhalApi_Exception_BadRequest("错误代码：S100"); 
       }
 
 

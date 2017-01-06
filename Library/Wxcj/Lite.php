@@ -52,24 +52,34 @@ class Wxcj_Lite {
 
 		$data ['url'] = $url; // 文章URL
 		$content = file_get_contents ( $url );
+		
 		preg_match ( '/<title>(.*)<\/title>/i', $content, $result );
 		$data ['title'] = $result [1]; // 文章标题
+		
 		preg_match ( '/var\s+msg_cdn_url\s*=\s*"([^\s]*)"/', $content, $result );
 		//$data ['cover'] = $result [1];
 		$data ['cover'] = $this->createPic ( $result [1], $path, "cover" );  // 封面
-		preg_match ( '/var\s+nickname\s*=\s*"([^\s]*)"/', $content, $result );
-		$data ['nickname'] = $result [1]; // 公众号昵称
+		
+		// preg_match ( '/var\s+nickname\s*=\s*"([^\s]*)"/', $content, $result );
+		// $data ['nickname'] = $result [1]; // 公众号昵称
+		
 		preg_match ( '/var\s+ct\s*=\s*"([^\s]*)"/', $content, $result );
-		$data ['ct'] = $result [1]; // 公众号发布的时间戳
-		preg_match ( '/var\s+user_name\s*=\s*"([^\s]*)"/', $content, $result );
-		$data ['user_name'] = $result [1]; // 公众号的原始ID
+		
+		$data ['ct'] = $result [1]?$result [1]:0; // 公众号发布的时间戳
+		
+		// preg_match ( '/var\s+user_name\s*=\s*"([^\s]*)"/', $content, $result );
+		// $data ['user_name'] = $result [1]; // 公众号的原始ID
 
-		preg_match ( '/var\s+round_head_img\s*=\s*"([^\s]*)"/', $content, $result );
-		$data ['round_head_img'] = $this->createPic ( $result [1], $path, "round_head_img_" . $data ['user_name'] ); // // 公众号头像
+		// preg_match ( '/var\s+round_head_img\s*=\s*"([^\s]*)"/', $content, $result );
+		// $data ['round_head_img'] = $this->createPic ( $result [1], $path, "round_head_img_" . $data ['user_name'] ); // // 公众号头像
+		
 		//preg_match ( "/s?__biz=(.*)&mid=/i", $url, $result );
 		//$data ['bizId'] = $result [1]; // 公众号BizId
 		preg_match ( '/var\s+msg_desc\s*=\s*"([^\s]*)"/', $content, $result );
-		$data ['msg_desc'] = $result [1]; // 公众号文章摘要
+
+		if(!empty($result [1])){
+			$data ['msg_desc'] = $result [1]; // 公众号文章摘要
+		}
 		                                  
 		// 获取微信主体内容
 		preg_match ( '/<div\s+class="rich_media_content\s*"\s+id="js_content">(.*?)<\/div>/is', $content, $result ); //注意非贪婪的?
@@ -97,13 +107,16 @@ class Wxcj_Lite {
 		$result [1] = str_replace ( "data-src", "src", $result [1] );
 		// 返回处理后的微信主体内容。
 		$data['content'] = trim($result [1]);
+		if(empty($data['content'])) return false;
 		$data['content'] =  str_replace ( 'background-image: url("', 'background-image: url("'.$this->dir, $data['content'] );
 		$data['content'] =  str_replace ( 'background-image: url(&quot;', 'background-image: url(&quot;'.$this->dir, $data['content'] );
 		$data['content'] =  str_replace ( 'src="', 'src="'.$this->dir, $data['content'] );
 
 		file_put_contents ( $path."/data.json", json_encode($data) );
 		
-		if($status) $this->upAllFile($path);
+		$status = $this->upAllFile($path);
+
+		return $status;
 		
 	}
 
@@ -115,28 +128,34 @@ class Wxcj_Lite {
 		preg_match_all($preg, $content, $match);
 
 		$data = array();
-		foreach($match[0] as $key => $value){
-			$preg = '/href="(.*?)\" target/s';
-			preg_match_all($preg, $value, $match_url);
-			$data[$key]['match_url'] = $match_url[1][0];
-			$preg = '/target=\"_blank\">(.*?)<\/a><\/h3>/i';
-			preg_match_all($preg, $value, $match_title);
-			$data[$key]['title'] = $match_title[1][0];
+		if(!empty($match[0])){
+			foreach($match[0] as $key => $value){
+				$preg = '/href="(.*?)\" target/s';
+				preg_match_all($preg, $value, $match_url);
+				$data[$key]['original_url'] = $match_url[1][0];
+				$preg = '/target=\"_blank\">(.*?)<\/a><\/h3>/i';
+				preg_match_all($preg, $value, $match_title);
+				$data[$key]['title'] = $match_title[1][0];
+			}
+			return $data;
+		}else{
+
+			return false;
 		}
 
-		return $data;
+		
 
 	}
 
 
 
 	//获取随机字符1-4r5f
-	private function createRandomStr($length=4){
-		$str = '0123456789abcdefghijklmnopqrstuvwxyz';//36个字符
-		$strlen = 36;
+	public function createRandomStr($length=4){
+		$str = '0123456789';//36个字符
+		$strlen = 10;
 		while($length > $strlen){
 		$str .= $str;
-		$strlen += 36;
+		$strlen += 10;
 		}
 		$str = str_shuffle($str);
 		return substr($str,0,$length);
@@ -204,6 +223,8 @@ class Wxcj_Lite {
 			rmdir( $dirName );
 		}
 	}
+
+
 
 
 

@@ -22,7 +22,9 @@ class Model_Users extends PhalApi_Model_NotORM {
      * 
      */
     public function isJoinIn($domain,$key) {
-    	if(empty(trim($domain))||empty(trim($key))){
+        $domain = trim($domain);
+        $key= trim($key);
+    	if(empty($domain)||empty($key)){
     		return false;
     	}
         $num = $this->getORM()
