@@ -81,11 +81,12 @@ class Domain_Article {
 
                  if($status){
                     $upret = $model->updateArticle($value['id'], $value['type_id'], $path_name ,1,$value['title']);     //更新数据库
-                    $Wxcj->delDirAndFile($path_name);   //删除当前目录和文件
+
                     $count_ok++;
                  }else{
                     $model->updateArticle($value['id'], $value['type_id'], $path_name ,3);
                  }
+                  $Wxcj->delDirAndFile($path_name);   //删除当前目录和文件
                  break;
                  case "lookmw": continue;    //未待过完续
                  break;
