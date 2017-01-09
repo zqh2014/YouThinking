@@ -37,7 +37,7 @@ class Wxcj_Lite {
 
 	//获取图片
 	private function createPic($url, $path, $name) {
-		$img = file_get_contents ( $url );
+		$img = @file_get_contents ( $url );
 		$info = getimagesize ( $url );
 		$type = str_replace ( 'image/', '', $info ['mime'] );
 		$fileName = $path . "/" . $name . ".$type";
@@ -45,27 +45,29 @@ class Wxcj_Lite {
 		return $fileName;
 	}
 
-	//获取并保存
+	//获取并保存--微信文章信息
 	private function transform($url, $path) {
 		if (! file_exists ( $path ))
 			mkdir ( $path );
 
-		$data ['url'] = $url; // 文章URL
-		$content = file_get_contents ( $url );
+		//$data ['url'] = $url; // 文章URL
+		$content = @file_get_contents ( $url );
 		
 		preg_match ( '/<title>(.*)<\/title>/i', $content, $result );
+		if(empty($result [1])) return false;  //标题为必填 字段
 		$data ['title'] = $result [1]; // 文章标题
 		
 		preg_match ( '/var\s+msg_cdn_url\s*=\s*"([^\s]*)"/', $content, $result );
 		//$data ['cover'] = $result [1];
+		if(!empty($result [1]))
 		$data ['cover'] = $this->createPic ( $result [1], $path, "cover" );  // 封面
 		
 		// preg_match ( '/var\s+nickname\s*=\s*"([^\s]*)"/', $content, $result );
 		// $data ['nickname'] = $result [1]; // 公众号昵称
 		
-		preg_match ( '/var\s+ct\s*=\s*"([^\s]*)"/', $content, $result );
+		//preg_match ( '/var\s+ct\s*=\s*"([^\s]*)"/', $content, $result );
 		
-		$data ['ct'] = $result [1]?$result [1]:0; // 公众号发布的时间戳
+		//$data ['ct'] = $result [1]?$result [1]:0; // 公众号发布的时间戳
 		
 		// preg_match ( '/var\s+user_name\s*=\s*"([^\s]*)"/', $content, $result );
 		// $data ['user_name'] = $result [1]; // 公众号的原始ID
@@ -107,7 +109,7 @@ class Wxcj_Lite {
 		$result [1] = str_replace ( "data-src", "src", $result [1] );
 		// 返回处理后的微信主体内容。
 		$data['content'] = trim($result [1]);
-		if(empty($data['content'])) return false;
+		if(empty($data['content'])) return false;	
 		$data['content'] =  str_replace ( 'background-image: url("', 'background-image: url("'.$this->dir, $data['content'] );
 		$data['content'] =  str_replace ( 'background-image: url(&quot;', 'background-image: url(&quot;'.$this->dir, $data['content'] );
 		$data['content'] =  str_replace ( 'src="', 'src="'.$this->dir, $data['content'] );
@@ -120,10 +122,34 @@ class Wxcj_Lite {
 		
 	}
 
+	//获取lookmw.com文章内容信息
+	public function get_lookmw_info($url,$path){
+
+			if (! file_exists ( $path ))
+			mkdir ( $path );
+
+		//$data ['url'] = $url; // 文章URL
+		$content = @file_get_contents ( $url );
+
+		// $data ['title'] = ''; //标题
+		// $data ['cover'] = '';	//封面
+		// $data ['msg_desc'] = '';	//描述
+		// $data['content'] = '';		//内容
+
+
+
+
+
+
+
+	}
+
+
+
 	//soso获取微信文章url，返回列表
 	public function get_link_by_url($url){
 
-		$content = file_get_contents($url);
+		$content = @file_get_contents($url);
 		$preg = '/\<li (.*?)\<\/li\>/s';
 		preg_match_all($preg, $content, $match);
 
@@ -132,7 +158,9 @@ class Wxcj_Lite {
 			foreach($match[0] as $key => $value){
 				$preg = '/href="(.*?)\" target/s';
 				preg_match_all($preg, $value, $match_url);
+				if(empty($match_url[1][0]))  continue;
 				$data[$key]['original_url'] = $match_url[1][0];
+
 				$preg = '/target=\"_blank\">(.*?)<\/a><\/h3>/i';
 				preg_match_all($preg, $value, $match_title);
 				$data[$key]['title'] = $match_title[1][0];
@@ -147,9 +175,54 @@ class Wxcj_Lite {
 
 	}
 
+	//lookmw.com文章url，返回列表
+	public function get_lookmw_url($url){
+
+		$content = @file_get_contents($url);
+		$content = iconv("GB2312","UTF-8//IGNORE",$content);
+		$preg = '/\<ul class=\"picAtc pr\"\>(.*?)\<\/ul\>/s';
+
+		preg_match_all($preg, $content, $match);
+		if(empty($match[1][0])) return false;
+		$preg = '/\<li>(.*?)\<\/li\>/s';
+		preg_match_all($preg, $match[1][0], $match2);
+		if(empty($match2[1])) return false;
+
+		$data = array();
+		if(!empty($match2[1])){
+			foreach($match2[1] as $key => $value){
+				
+				//链接
+				$preg ='/\<h3\>\<a href=\"(.*?)"/i';
+				preg_match_all($preg, $value, $match_url);
+				if(empty($match_url[1][0]))  continue;
+				$data[$key]['original_url'] = "http://www.lookmw.cn".$match_url[1][0];
+
+				//标题
+				$preg = '/target=\"_blank\">(.*?)\<\/a\>/i';
+				preg_match_all($preg, $value, $match_title);
+				$data[$key]['title'] = strip_tags($match_title[1][0]);
+
+				//列表图
+				$preg = '/data-original=\'(.*?)\'/i';
+				preg_match_all($preg, $value, $match_img);
+				if(!empty($match_img[1][0]))
+				$data[$key]['img_url'] = "http://www.lookmw.cn".$match_img[1][0];
+
+			}
+
+			return $data;
+		}else{
+
+			return false;
+		}
+
+		
+
+	}
 
 
-	//获取随机字符1-4r5f
+	//获取随机字符
 	public function createRandomStr($length=4){
 		$str = '0123456789';//36个字符
 		$strlen = 10;
@@ -224,6 +297,20 @@ class Wxcj_Lite {
 		}
 	}
 
+	//删除云上面的文件夹
+	public function delFolder( $folder ){
+
+		$folder = "article_contents/".$folder."/";
+		$list = Cosapi::listFolder($this->bucket_contents,$folder,100);
+
+		foreach($list['data']['infos'] as $val){
+		
+			Cosapi::delFile($this->bucket_contents, $folder.$val['name']);
+		}
+		$ret = Cosapi::delFolder($this->bucket_contents, $folder);
+		return $ret;
+		
+	}
 
 
 

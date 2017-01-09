@@ -75,10 +75,27 @@ class Model_Article extends PhalApi_Model_NotORM {
   
     public function getCatLink(){
 
+      $this->delWxArticle(); //删除旧数据（前一天的微信链接）
       $sql = "select * from ic_article_cat_links order by cj_times asc";    //次数小的在前面
       $data = $this->getORM()->queryRows($sql);   
        return $data;
     }
+
+
+    /**
+    * 采集链接次数加1
+    * 
+    * @return $data
+    */
+
+  
+    public function addLinkTime($id){
+
+      $sql = "UPDATE ic_article_cat_links SET cj_times = cj_times+1 WHERE id =".$id;    //次数小的在前面
+      $data = $this->getORM()->queryRows($sql);   
+       return $data;
+    }
+
 
 
     /**
@@ -88,13 +105,32 @@ class Model_Article extends PhalApi_Model_NotORM {
     */
 
   
-    public function getArticle($limit){
-      if(empty($limit)) $limit=100;
-        $limit=1;
+    public function getArticle(){
+
+      $limit=1;
       $sql = "select * from ic_article_temp where status=0 limit {$limit}";    
       $data = $this->getORM()->queryRows($sql);   
        return $data;
     }
+
+
+     /**
+    * 删除微信前一天采集的文章链接
+    * 
+    * @return $data
+    */
+
+  
+    public function delWxArticle(){
+
+      $ago_time = strtotime(date("Y-m-d",time()));
+
+      $sql = "delete from ic_article_temp where url_type='wx' and ctime<".$ago_time;    
+      $data = $this->getORM()->queryRows($sql);   
+       return $data;
+    }
+
+       
 
     /**
     * 更新文章内容
@@ -103,7 +139,7 @@ class Model_Article extends PhalApi_Model_NotORM {
     */
 
   
-    public function updateArticle($id,$type_id,$path_name,$status,$title){
+    public function updateArticle($id,$type_id,$path_name,$status,$title=''){
 
             if($status==1){
                  $rs=$this->getORM()->where('id', $id)->update(array("status"=>1));

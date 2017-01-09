@@ -2,7 +2,7 @@
 
 require('cos-php/include.php');
 use qcloudcos\Cosapi;
-Cosapi::setTimeout(180);
+Cosapi::setTimeout(1800);
 // 设置COS所在的区域，对应关系如下：
 //     华南  -> gz
 //     华中  -> sh

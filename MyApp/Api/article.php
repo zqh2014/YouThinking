@@ -21,9 +21,7 @@ class Api_Article extends PhalApi_Api {
                 'getArticleType'=> array(
                     'type_id' => array('name' => 'type_id', 'require' => true) ),                  
                 'getArticleList'=> array(
-                    'type_id' => array('name' => 'type_id', 'require' => true) ), 
-                'putArticleInfo' =>array(
-                    'limit' => array('name' => 'limit', 'require' => false)) 
+                    'type_id' => array('name' => 'type_id', 'require' => true) )
              );
 
         return $arr;    
@@ -51,7 +49,7 @@ class Api_Article extends PhalApi_Api {
 
 
     /*  获取分文章详细内容
-    * @Param  $path_name 文章目录，从腾讯去获取
+    * @Param  $path_name 文章目录，从腾讯云获取
     * @Return Array 文章详细内容
     */
     public function getArticleInfo(){
@@ -73,8 +71,21 @@ class Api_Article extends PhalApi_Api {
 
         $domain = new domain_Article();
 
-        return $domain->putArticleContent($this->limit);
+        return $domain->putArticleContent();
 
+    }
+
+
+    //删除云上指定的文件夹
+    public function delFolder(  ){
+            
+        $domain = new domain_Article();
+        $folder = '18-6hq2';
+        $aa =  array("9-x1v2","94906","58140","59135","59570","6-l054","66740","7-49yr","73854","8-o3g9","80894");
+        foreach($aa as $vv){
+            $domain->delFolder($vv);
+        }
+        return $domain->delFolder($folder);
     }
 
 
