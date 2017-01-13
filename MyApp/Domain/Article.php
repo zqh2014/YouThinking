@@ -77,17 +77,31 @@ class Domain_Article {
              switch($value['url_type']){
                  case "wx":  //微信文章
 
-                
-                 //$article_list = $Wxcj->get_link_by_url($value['url']);
-                 if(empty($value['path_name'])){
-                     $path_name = $value['id'].$Wxcj->createRandomStr();
-                 }else{
-                    $path_name = $value['path_name'];
-                 }
+                 $acount = $model->getArticleCount();    //文章总数量，用来生成ID
+                  //print_r( $model->getArticleCount()); exit;
+                 $path_name = $acount.$Wxcj->createRandomStr(); //生成目录名称（文章唯一的ID）
+                 
 
                  $status = $Wxcj->fetch($value['original_url'],$path_name); //获取文章内容并保存到腾讯云
 
-                 if($status){
+
+                 break;
+                 case "lookmw": 
+                 $acount = $model->getArticleCount();    //文章总数量，用来生成ID
+                
+                 $path_name = $acount.$Wxcj->createRandomStr(); //生成目录名称（文章唯一的ID）
+                 $status = $Wxcj->get_lookmw_info($value['original_url'],$path_name,$value['img_url']); //获取文章内容并保存到腾讯云
+                 
+
+                 break;
+                 default: 
+                 continue;
+                 break;
+
+
+             }
+
+              if($status){
                     $upret = $model->updateArticle($value['id'], $value['type_id'], $path_name ,1,$value['title']);     //更新数据库
 
                     $count_ok++;
@@ -95,16 +109,6 @@ class Domain_Article {
                     $model->updateArticle($value['id'], $value['type_id'], $path_name ,3);
                  }
                   $Wxcj->delDirAndFile($path_name);   //删除当前目录和文件
-                 break;
-                 case "lookmw": continue;    //未待过完续
-
-
-
-                 break;
-                 default: continue;
-
-
-             }
 
         }
         return array("count_ok"=>$count_ok); 

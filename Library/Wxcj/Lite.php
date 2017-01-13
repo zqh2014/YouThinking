@@ -122,25 +122,46 @@ class Wxcj_Lite {
 		
 	}
 
-	//获取lookmw.com文章内容信息
-	public function get_lookmw_info($url,$path){
+	//获取www.lookmw.com文章内容信息
+	public function get_lookmw_info($url,$path,$img_url=''){
 
 			if (! file_exists ( $path ))
 			mkdir ( $path );
-
+ 
 		//$data ['url'] = $url; // 文章URL
 		$content = @file_get_contents ( $url );
+		$content = iconv("GB2312","UTF-8//IGNORE",$content);
+		//$content = preg_replace("/<img[^>]*\/>/","",$content);
+		
 
-		// $data ['title'] = ''; //标题
-		// $data ['cover'] = '';	//封面
-		// $data ['msg_desc'] = '';	//描述
-		// $data['content'] = '';		//内容
+		$preg = '/\<h1(.*?)\<\/h1\>/s';
+		preg_match_all($preg, $content, $match);
+		if(empty($match[1])) return false;
+		$data ['title'] = $match[1]; //标题 <h1>想你的夜，爱与痛在我心里纠缠</h1>
+		
 
+		$data ['cover'] = $img_url;	//封面
+		if(!empty($img_url)){
+			$this->createPic ( $img_url, $path, "cover" ); // 保存为本地图片
+		}
 
+		$preg = '/\<meta name=\"description\" content=\"(.*?)\" \/\>/is';
+		preg_match_all($preg, $content, $match);
+		$data ['msg_desc'] = $match[1];	//描述  
 
-
-
-
+		$preg = '/\<article(.*?)\<\/article\>/si';
+		preg_match_all($preg, $content, $match);
+		$data['content'] = $match[1];		//内容
+		// <ul class="diggts">
+		$data['content']= preg_replace("/<img[^>]*\/>/","", $data['content']);
+		$data['content']= preg_replace("/\<ul class=\"diggts\">(.*?)<\/ul\>/is","", $data['content']);
+		$data['content']= preg_replace("/\<ul class=\"pagelist\">(.*?)<\/ul\>/is","", $data['content']);
+		if(empty($data['content'])) return false;
+		file_put_contents ( $path."/data.json", json_encode($data) );
+	
+	
+		$status = $this->upAllFile($path);
+		return $status;
 
 	}
 

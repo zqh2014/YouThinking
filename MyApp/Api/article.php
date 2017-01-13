@@ -49,7 +49,7 @@ class Api_Article extends PhalApi_Api {
 
 
     /*  获取分文章详细内容
-    * @Param  $path_name 文章目录，从腾讯云获取
+    * @Param  $id 文章id
     * @Return Array 文章详细内容
     */
     public function getArticleInfo(){
@@ -81,7 +81,7 @@ class Api_Article extends PhalApi_Api {
             
         $domain = new domain_Article();
         $folder = '18-6hq2';
-        $aa =  array("9-x1v2","94906","58140","59135","59570","6-l054","66740","7-49yr","73854","8-o3g9","80894");
+        $aa =  array("04310","10563","11032","14392","21038","23057","31634");
         foreach($aa as $vv){
             $domain->delFolder($vv);
         }

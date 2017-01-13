@@ -113,6 +113,22 @@ class Model_Article extends PhalApi_Model_NotORM {
        return $data;
     }
 
+    /**
+    * 获取已采集文章最大的ID
+    * 
+    * @return $data
+    */
+
+  
+    public function getArticleCount(){
+
+      $limit=1;
+      $sql = "select id from ic_article order by id desc limit 1";    
+      $data = $this->getORM()->queryRows($sql);   
+      
+      return $data[0]['id'];
+    }
+
 
      /**
     * 删除微信前一天采集的文章链接
