@@ -336,5 +336,8 @@ class Wxcj_Lite {
 
 
 
+
+
+
 }	//class end
 
