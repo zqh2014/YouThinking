@@ -50,7 +50,7 @@ class Model_Article extends PhalApi_Model_NotORM {
     //标题是否存在
     public function title_isexist($title){
 
-     $info = $this->getORM()->where("title LIKE ?","%{$title}%")->fetchOne();   //插入多条
+     $info = $this->getORM()->where("title LIKE ?","%{$title}%")->fetchOne();   
      if(!empty($info)){
         return true;    //存在
      }else{ 
@@ -120,7 +120,7 @@ class Model_Article extends PhalApi_Model_NotORM {
     */
 
   
-    public function getArticleCount(){
+    public function getMaxID(){
 
       $limit=1;
       $sql = "select id from ic_article order by id desc limit 1";    
@@ -158,7 +158,7 @@ class Model_Article extends PhalApi_Model_NotORM {
     public function updateArticle($id,$type_id,$path_name,$status,$title=''){
 
             if($status==1){
-                 $rs=$this->getORM()->where('id', $id)->update(array("status"=>1));
+                $rs=$this->getORM()->where('id', $id)->update(array("status"=>1));
 
                 $time = time();
                 $temp = $this->getORM()->where('id', $id)->fetchOne();
@@ -169,7 +169,8 @@ class Model_Article extends PhalApi_Model_NotORM {
                 return true;
             }else if($status==3){
 
-                 $rs=$this->getORM()->where('id', $id)->update(array("status"=>3));
+                 //$rs=$this->getORM()->where('id', $id)->update(array("status"=>3));
+                 $this->getORM()->where('id', $id)->delete();
                  return false;
             }
 

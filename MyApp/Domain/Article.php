@@ -77,28 +77,20 @@ class Domain_Article {
              switch($value['url_type']){
                  case "wx":  //微信文章
 
-                 $acount = $model->getArticleCount();    //文章总数量，用来生成ID
-                  //print_r( $model->getArticleCount()); exit;
-                 $path_name = $acount.$Wxcj->createRandomStr(); //生成目录名称（文章唯一的ID）
-                 
-
+                 $maxid = $model->getMaxID();    //文章最大ID，用来生成ID                
+                 $path_name = $maxid.$Wxcj->createRandomStr(); //生成目录名称（文章唯一的ID）               
                  $status = $Wxcj->fetch($value['original_url'],$path_name); //获取文章内容并保存到腾讯云
-
-
                  break;
                  case "lookmw": 
-                 $acount = $model->getArticleCount();    //文章总数量，用来生成ID
+                 $maxid = $model->getMaxID();    //文章最大ID，用来生成ID
                 
-                 $path_name = $acount.$Wxcj->createRandomStr(); //生成目录名称（文章唯一的ID）
+                 $path_name = $maxid.$Wxcj->createRandomStr(); //生成目录名称（文章唯一的ID）
                  $status = $Wxcj->get_lookmw_info($value['original_url'],$path_name,$value['img_url']); //获取文章内容并保存到腾讯云
                  
-
                  break;
                  default: 
                  continue;
                  break;
-
-
              }
 
               if($status){
@@ -108,12 +100,14 @@ class Domain_Article {
                  }else{
                     $model->updateArticle($value['id'], $value['type_id'], $path_name ,3);
                  }
-                  $Wxcj->delDirAndFile($path_name);   //删除当前目录和文件
+                $Wxcj->delDirAndFile($path_name);   //删除当前目录和文件
 
         }
         return array("count_ok"=>$count_ok); 
 
     }
+
+
 
     //删除指定的文件夹
     public function delFolder( $folder ){

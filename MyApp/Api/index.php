@@ -1,7 +1,6 @@
 <?php
 /**
- * 默认接口服务类
- *
+ * 框架默认接口服务类 *
  * @author: dogstar <chanzonghuang@gmail.com> 2014-10-04
  */
 
