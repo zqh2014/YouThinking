@@ -2,7 +2,7 @@
 /**
  *  统一入口
  */
-
+error_reporting(0);
 require_once dirname(__FILE__) . '/../init.php';
 
 //装载你的接口
@@ -13,7 +13,7 @@ if(isset($_GET['debug_ic'])&&$_GET['debug_ic']){
 	DI()->loginLite->m_debug = true;	//调试
 }
 
-/** ---------------- 响应接口请求 ---------------- **/
+/** ----------------响应接口请求---------------- **/
 
 $api = new PhalApi();
 $rs = $api->response();

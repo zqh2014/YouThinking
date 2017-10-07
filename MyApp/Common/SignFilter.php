@@ -3,6 +3,7 @@
 class Common_SignFilter implements PhalApi_Filter {
 
     public function check() {
+
         if (DI()->request->get('__debug__') == '1') {
             return;
         }
@@ -10,7 +11,6 @@ class Common_SignFilter implements PhalApi_Filter {
       $Domain_Users = new Domain_Users();
       $domain = DI()->request->get('domain');
       $key =  DI()->request->get('key');
-
       $is_url = strpos($domain,"http://");
 
       if($is_url!==false){
