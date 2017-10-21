@@ -99,6 +99,8 @@ class lookmw {
 		$data['content']= preg_replace("/\<ul class=\"pagelist\">(.*?)<\/ul\>/is","", $data['content']);
 		if(empty($data['content'])) return false;
 
+		$preg = "/<script[\s\S]*?script>/i";
+		$data['content'] = preg_replace($preg,"",$data['content']);   
 		@file_put_contents ( $path."/data.json", json_encode($data) );
 
 		return $path;
